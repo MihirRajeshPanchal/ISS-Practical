@@ -8,4 +8,5 @@ def caesar_cipher(text, shift):
             result += char
     return result
 
-print(caesar_cipher("Mihir",1))
+for i in range(1,26):
+    print(str(i)+" : "+caesar_cipher("Mihir",i))

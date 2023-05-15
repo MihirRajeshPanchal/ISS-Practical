@@ -1,47 +1,83 @@
-import math
+def encrypt(message, rows, cols):
+    # Determine the number of padding characters needed
+    extraChars = rows * cols - len(message)
+    if extraChars > 0:
+        message += ' ' * extraChars
+        
+    # Create the matrix
+    matrix = [[0 for j in range(cols)] for i in range(rows)]
+    index = 0
+    for i in range(rows):
+        for j in range(cols):
+            matrix[i][j] = message[index]
+            index += 1
+    
+    # Print the matrix
+    print("Original matrix: ")
+    for i in range(rows):
+        for j in range(cols):
+            print(matrix[i][j], end=' ')
+        print()
+    
+    # Transpose the matrix
+    transposed = [[0 for j in range(rows)] for i in range(cols)]
+    for i in range(cols):
+        for j in range(rows):
+            transposed[i][j] = matrix[j][i]
+    
+    # Print the transposed matrix
+    print("Transposed matrix: ")
+    for i in range(cols):
+        for j in range(rows):
+            print(transposed[i][j], end=' ')
+        print()
+    
+    # Read the cipher message from the transposed matrix
+    cipherMessage = ""
+    for i in range(cols):
+        for j in range(rows):
+            cipherMessage += transposed[i][j]
+    
+    return cipherMessage
 
-def encrypt(message, key):
-    # Remove any spaces and convert to uppercase
-    message = message.replace(" ", "").upper()
-    # Calculate the grid size
-    grid_size = math.ceil(len(message) / key)
-    # Fill in any remaining spaces with filler characters
-    filler = "X"
-    message += filler * (grid_size * key - len(message))
-    # Create the grid
-    grid = [list(message[i:i+key]) for i in range(0, len(message), key)]
-    # Read off the columns to create the ciphertext
-    ciphertext = ""
-    for i in range(key):
-        for j in range(grid_size):
-            ciphertext += grid[j][i]
-    return ciphertext
 
-def decrypt(ciphertext, key):
-    # Calculate the grid size
-    grid_size = math.ceil(len(ciphertext) / key)
-    # Create the grid
-    grid = [[""] * grid_size for _ in range(key)]
-    idx = 0
-    for i in range(key):
-        for j in range(grid_size):
-            if idx < len(ciphertext):
-                grid[i][j] = ciphertext[idx]
-                idx += 1
-    # Read off the rows to create the plaintext
-    plaintext = ""
-    for i in range(grid_size):
-        for j in range(key):
-            plaintext += grid[j][i]
-    # Remove any filler characters
-    plaintext = plaintext.replace("X", "")
-    return plaintext
+def decrypt(cipherMessage, rows, cols):
+    # Determine the number of padding characters
+    extraChars = rows * cols - len(cipherMessage)
+    if extraChars > 0:
+        cipherMessage += ' ' * extraChars
+        
+    # Create the matrix
+    matrix = [[0 for j in range(rows)] for i in range(cols)]
+    index = 0
+    for i in range(cols):
+        for j in range(rows):
+            matrix[i][j] = cipherMessage[index]
+            index += 1
+    
+    # Transpose the matrix
+    transposed = [[0 for j in range(cols)] for i in range(rows)]
+    for i in range(rows):
+        for j in range(cols):
+            transposed[i][j] = matrix[j][i]
+    
+    # Read the original message from the transposed matrix
+    originalMessage = ""
+    for i in range(rows):
+        for j in range(cols):
+            originalMessage += transposed[i][j]
+    
+    return originalMessage
 
 
-# Example usage
 message = "HELLO WORLD"
-key = 5
-ciphertext = encrypt(message, key)
-print("Ciphertext:", ciphertext)
-plaintext = decrypt(ciphertext, key)
-print("Plaintext:", plaintext)
+rows = 4
+cols = 3
+
+print("Original message: ", message)
+
+cipherMessage = encrypt(message, rows, cols)
+print("Cipher message: ", cipherMessage)
+
+originalMessage = decrypt(cipherMessage, rows, cols)
+print("Decrypted message: ", originalMessage)

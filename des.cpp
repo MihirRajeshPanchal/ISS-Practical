@@ -1,95 +1,138 @@
-#include <iostream>
-#include <string>
+#include<iostream>
+#include<string>
 
 using namespace std;
 
-// Hexadecimal to binary conversion
-string hex2bin(string s) {
-  string bin = "";
-  for (char c : s) {
-    switch (c) {
-      case '0': bin += "0000"; break;
-      case '1': bin += "0001"; break;
-      case '2': bin += "0010"; break;
-      case '3': bin += "0011"; break;
-      case '4': bin += "0100"; break;
-      case '5': bin += "0101"; break;
-      case '6': bin += "0110"; break;
-      case '7': bin += "0111"; break;
-      case '8': bin += "1000"; break;
-      case '9': bin += "1001"; break;
-      case 'A': bin += "1010"; break;
-      case 'B': bin += "1011"; break;
-      case 'C': bin += "1100"; break;
-      case 'D': bin += "1101"; break;
-      case 'E': bin += "1110"; break;
-      case 'F': bin += "1111"; break;
+string round_keys[0];
+
+int data[64] = {1,1,1,1,0,0,0,0,
+                1,0,1,0,1,0,1,0,
+                1,0,1,0,1,0,1,0,
+                0,0,1,1,0,0,1,1,
+                1,1,1,1,0,0,0,0,
+                1,0,1,0,1,0,1,0,
+                1,0,1,0,1,0,1,0,
+                0,0,1,1,0,0,1,1};
+
+int shiftedData[64];
+
+void print_array(int array_print[])
+{
+  for(int i=0;i<sizeof(array_print)/sizeof(array_print[0]);i++)
+  {
+      cout<<array_print[i];
+  }
+}
+void shift_left(int shift_data , int d[], int size)
+{
+   shiftedData[0] = d[63];
+   for(int i=1;i<size;i++)
+   {
+       shiftedData[i] += d[i+1];
+   }
+}
+void shift_right_once(int d[],int size)
+{
+   shiftedData[0] = d[63];
+   for(int i=1;i<size;i++)
+   {
+       shiftedData[i] += d[i-1];
+   }
+}
+
+void convert64to56(int input[], int output[])
+{
+    int outputIndex = 0;
+    for(int i=0;i<64;i++)
+    {
+        if((i+1) % 8 != 0)
+            {
+              //skip every 8th element
+              output[outputIndex] = input[i];
+              outputIndex++;
+            }
     }
-  }
-  return bin;
 }
 
-// Binary to hexadecimal conversion
-string bin2hex(string s) {
-  string hex = "";
-  for (int i = 0; i < s.size(); i += 4) {
-    int val = stoi(s.substr(i, 4), 2);
-    switch (val) {
-      case 0: hex += "00"; break;
-      case 1: hex += "01"; break;
-      case 2: hex += "02"; break;
-      case 3: hex += "03"; break;
-      case 4: hex += "04"; break;
-      case 5: hex += "05"; break;
-      case 6: hex += "06"; break;
-      case 7: hex += "07"; break;
-      case 8: hex += "08"; break;
-      case 9: hex += "09"; break;
-      case 10: hex += "0A"; break;
-      case 11: hex += "0B"; break;
-      case 12: hex += "0C"; break;
-      case 13: hex += "0D"; break;
-      case 14: hex += "0E"; break;
-      case 15: hex += "0F"; break;
-    }
-  }
-  return hex;
-}
+int main()
+{
+  int LO[32],RO[32],j=32,key[56],LO_key[28],RO_key[28];
 
-// Binary to decimal conversion
-int bin2dec(string s) {
-  int val = 0;
-  for (int i = 0; i < s.size(); i++) {
-    val = val * 2 + (s[i] - '0');
+  for(int c:data)
+  {
+      cout<<c;
   }
-  return val;
-}
+  cout<<endl;
 
-// Decimal to binary conversion
-string dec2bin(int n) {
-  string bin = "";
-  while (n > 0) {
-    bin += (n % 2) + '0';
-    n /= 2;
-  }
-  reverse(bin.begin(), bin.end());
-  return bin;
-}
+  shift_right_once(data , 64);
 
-// Permute function to rearrange the bits
-string permute(string k, int *arr, int n) {
-  string permuted = "";
-  for (int i = 0; i < n; i++) {
-    permuted += k[arr[i] - 1];
-  }
-  return permuted;
-}
+  cout<< "Right shifted data: \n";
 
-// Shifting the bits towards left by nth shifts
-string shift_left(string k, int n) {
-  string s = "";
-  for (int i = 0; i < n; i++) {
-    s += k[k.size() - 1];
+  for(int c: shiftedData)
+  {
+      cout<<c;
   }
-  for (int i = 0; i < k.size() - n; i++) {
-    s +=
+  cout<<endl;
+
+  for(int i=0;i<sizeof(LO)/sizeof(LO[0]);i++)
+  {
+      LO[i] = shiftedData[i];
+  }
+
+  for(int i=0;i<sizeof(RO)/sizeof(RO[0]);i++)
+  {
+      RO[i] = shiftedData[j];
+      j++;
+  }
+
+ cout<<"Left data: \n";
+ for(int c : LO)
+ {
+     cout<<c;
+ }
+ cout<<endl;
+
+ cout<<"Right data: \n";
+ for(int c : RO)
+ {
+     cout<<c;
+ }
+ cout<<endl;
+
+ //key generation
+ convert64to56(data,key);
+ cout<<"56 bit key: \n";
+  for(int c : key)
+ {
+     cout<<c;
+ }
+ cout<<endl;
+
+for(int i=0;i<sizeof(LO_key)/sizeof(LO_key[0]);i++)
+{
+    LO_key[i] = key[i];
+}
+j=28;
+for(int i=0;i<sizeof(RO_key)/sizeof(RO_key[0]);i++)
+{
+    RO_key[i] = key[j];
+    j++;
+}
+cout<<"Left key data: \n";
+for(int c: LO_key)
+{
+    cout<< c;
+
+}
+cout<<endl;
+
+cout<<"Right key data: \n";
+for(int c: RO_key)
+{
+    cout<< c;
+
+}
+cout<<endl;
+
+return 0;
+}

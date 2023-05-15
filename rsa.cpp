@@ -66,7 +66,7 @@ int main() {
     for (int i = 0; i < message.length(); i++) {
         int c = encrypted[i];
         int m = fmod(pow(c, d), n);
-        decrypted += (char)m;
+        decrypted += static_cast<char>(m);
     }
 
     // Step 8: Print the encrypted and decrypted messages

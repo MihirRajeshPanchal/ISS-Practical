@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 
-using namespace;
+using namespace std;
 
 string encrypt(string message, string key) {
     string ciphertext = "";

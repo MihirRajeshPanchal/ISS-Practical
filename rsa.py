@@ -50,9 +50,8 @@ q = 19
 public_key, private_key = generate_keypair(p, q)
 print("Public key:", public_key)
 print("Private key:", private_key)
-message = "Hello world"
+message = "Mihir"
 encrypted_message = encrypt(public_key, message)
 print("Encrypted message:", encrypted_message)
 decrypted_message = decrypt(private_key, encrypted_message)
 print("Decrypted message:", decrypted_message)
-
