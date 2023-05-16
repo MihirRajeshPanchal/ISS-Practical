@@ -13,7 +13,7 @@ step2 = int(math.pow(g, b) % p)
 print("Bob code: ", step2)
 
 step3 = int(math.pow(step2, a) % p)
-print("Bob code: ", step3)
+print("Alice code: ", step3)
 
 step4 = int(math.pow(step1, b) % p)
 print("Bob code: ", step4)

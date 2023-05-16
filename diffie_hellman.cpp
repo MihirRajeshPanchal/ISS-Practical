@@ -26,7 +26,7 @@ int main(){
 
     cout<<"Step 3"<<endl;
     step3= (int)pow(step1,b)%p;
-    cout<<"Bob code : "<<step3<<endl;
+    cout<<"Alice code : "<<step3<<endl;
 
     cout<<"Step 4"<<endl;
     step4= (int)pow(step2,a)%p;
